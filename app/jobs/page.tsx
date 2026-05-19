@@ -11,15 +11,16 @@ type JobsPageProps = {
     category?: string;
     source?: string;
     employmentType?: string;
+    includeStale?: string;
   }>;
 };
 
-function filterHref(filters: { q?: string; location?: string; category?: string; source?: string; employmentType?: string }, removeKey?: keyof typeof filters) {
+function filterHref(filters: { q?: string; location?: string; category?: string; source?: string; employmentType?: string; includeStale?: boolean }, removeKey?: keyof typeof filters) {
   const params = new URLSearchParams();
 
   Object.entries(filters).forEach(([key, value]) => {
     if (value && key !== removeKey) {
-      params.set(key, value);
+      params.set(key, String(value));
     }
   });
 
@@ -35,6 +36,7 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
     category: rawFilters.category,
     source: rawFilters.source,
     employmentType: rawFilters.employmentType,
+    includeStale: rawFilters.includeStale === "true" ? true : undefined,
   });
   const jobs = await getJobs(filters);
   const facets = await getJobFacets();
@@ -45,6 +47,7 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
     category: filters.category,
     source: filters.source,
     employmentType: filters.employmentType,
+    includeStale: filters.includeStale,
   };
 
   const activeFilters: Array<{ key: keyof typeof currentFilterParams; label: string; value: string }> = [];
@@ -54,6 +57,7 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
   if (filters.category) activeFilters.push({ key: "category", label: "Kategori", value: filters.category });
   if (filters.source) activeFilters.push({ key: "source", label: "Sumber", value: filters.source });
   if (filters.employmentType) activeFilters.push({ key: "employmentType", label: "Tipe", value: filters.employmentType });
+  if (filters.includeStale) activeFilters.push({ key: "includeStale", label: "Arsip", value: "Termasuk lowongan lama" });
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
@@ -67,6 +71,7 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
       </div>
 
       <form className="mt-8 grid gap-3 rounded-3xl border border-ink/10 bg-white p-4 shadow-sm md:grid-cols-[1.4fr_1fr_1fr_1fr_1fr_auto]">
+        {filters.includeStale ? <input type="hidden" name="includeStale" value="true" /> : null}
         <input name="q" defaultValue={filters.keyword} placeholder="Cari title, company, skill..." className="rounded-2xl border border-ink/10 px-4 py-3 text-sm outline-none focus:border-leaf" />
         <select name="location" defaultValue={filters.location ?? ""} className="rounded-2xl border border-ink/10 px-4 py-3 text-sm outline-none focus:border-leaf">
           <option value="">Semua lokasi</option>
@@ -89,6 +94,11 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
           <Link href="/jobs" className="rounded-2xl border border-ink/10 px-5 py-3 text-sm font-bold text-ink/70 hover:border-leaf/40">Reset</Link>
         </div>
       </form>
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        {!filters.includeStale ? <Link href={filterHref({ ...currentFilterParams, includeStale: true })} className="rounded-full bg-white px-4 py-2 text-xs font-bold text-ink/60 shadow-sm transition hover:text-leaf">Lihat termasuk lowongan lama</Link> : null}
+        {filters.includeStale ? <Link href={filterHref(currentFilterParams, "includeStale")} className="rounded-full border border-leaf/20 px-4 py-2 text-xs font-bold text-leaf transition hover:bg-white">Sembunyikan lowongan lama</Link> : null}
+      </div>
 
       {activeFilters.length > 0 ? (
         <div className="mt-4 rounded-3xl border border-leaf/15 bg-leaf/10 p-4">

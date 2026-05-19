@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SaveJobButton } from "@/components/SaveJobButton";
-import { getJobById, getJobs } from "@/lib/jobs";
+import { formatJobFreshness, getJobById, getJobs, isNewJob } from "@/lib/jobs";
 
 type JobDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -42,6 +42,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
             <p className="mt-4 text-lg text-ink/70">{job.company} · {job.location}</p>
           </div>
           <div className="flex flex-col items-start gap-2 sm:items-end">
+            {isNewJob(job) ? <span className="w-fit rounded-full bg-leaf px-4 py-2 text-sm font-black text-white">Baru</span> : null}
             <span className="w-fit rounded-full bg-leaf/10 px-4 py-2 text-sm font-bold text-leaf">{job.category}</span>
             <SaveJobButton jobId={job.id} variant="detail" />
           </div>
@@ -50,7 +51,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
         <dl className="mt-8 grid gap-4 sm:grid-cols-3">
           <div className="rounded-2xl bg-cream p-4"><dt className="text-xs font-bold uppercase tracking-[0.16em] text-ink/45">Type</dt><dd className="mt-2 font-semibold">{job.employmentType}</dd></div>
           <div className="rounded-2xl bg-cream p-4"><dt className="text-xs font-bold uppercase tracking-[0.16em] text-ink/45">Salary</dt><dd className="mt-2 font-semibold">{job.salaryText ?? "Not listed"}</dd></div>
-          <div className="rounded-2xl bg-cream p-4"><dt className="text-xs font-bold uppercase tracking-[0.16em] text-ink/45">Posted</dt><dd className="mt-2 font-semibold">{new Intl.DateTimeFormat("id-ID", { dateStyle: "medium" }).format(job.postedAt)}</dd></div>
+          <div className="rounded-2xl bg-cream p-4"><dt className="text-xs font-bold uppercase tracking-[0.16em] text-ink/45">Posted</dt><dd className="mt-2 font-semibold">{formatJobFreshness(job)}</dd><dd className="mt-1 text-xs font-semibold text-ink/50">{new Intl.DateTimeFormat("id-ID", { dateStyle: "medium" }).format(job.postedAt)}</dd></div>
         </dl>
 
         <section className="mt-8">

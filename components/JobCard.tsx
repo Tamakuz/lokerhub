@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { SaveJobButton } from "@/components/SaveJobButton";
-import type { JobPost } from "@/lib/jobs";
+import { formatJobFreshness, isNewJob, type JobPost } from "@/lib/jobs";
 
 export function JobCard({ job }: { job: JobPost }) {
   return (
@@ -13,14 +13,17 @@ export function JobCard({ job }: { job: JobPost }) {
           </h2>
           <p className="mt-2 text-sm text-ink/70">{job.company} · {job.location}</p>
         </div>
-        <span className="w-fit rounded-full bg-leaf/10 px-3 py-1 text-xs font-semibold text-leaf">{job.category}</span>
+        <div className="flex flex-wrap gap-2 sm:justify-end">
+          {isNewJob(job) ? <span className="w-fit rounded-full bg-leaf px-3 py-1 text-xs font-black text-white">Baru</span> : null}
+          <span className="w-fit rounded-full bg-leaf/10 px-3 py-1 text-xs font-semibold text-leaf">{job.category}</span>
+        </div>
       </div>
       <p className="mt-4 line-clamp-2 text-sm leading-6 text-ink/75">{job.description}</p>
       <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="flex flex-wrap items-center gap-2 text-xs text-ink/60">
           <span>{job.employmentType}</span>
           {job.salaryText ? <span>· {job.salaryText}</span> : null}
-          <span>· Posted {new Intl.DateTimeFormat("id-ID", { dateStyle: "medium" }).format(new Date(job.postedAt))}</span>
+          <span>· Posted {formatJobFreshness(job)}</span>
         </div>
         <div className="flex flex-col gap-2 sm:flex-row">
           <SaveJobButton jobId={job.id} />

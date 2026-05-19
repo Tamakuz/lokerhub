@@ -30,11 +30,15 @@ export const jobFiltersSchema = z.object({
   category: z.string().trim().max(100).optional(),
   source: z.string().trim().max(100).optional(),
   employmentType: z.string().trim().max(100).optional(),
+  includeStale: z.boolean().optional(),
 });
 
 export type JobFilters = z.infer<typeof jobFiltersSchema>;
 
 const now = new Date("2026-05-19T00:00:00.000Z");
+const dayInMs = 24 * 60 * 60 * 1000;
+export const freshJobWindowDays = 30;
+export const newJobWindowDays = 7;
 
 export const sampleJobs: ImportJobPost[] = [
   {
@@ -125,6 +129,34 @@ export const sampleJobs: ImportJobPost[] = [
 
 export const normalizedSampleJobs = z.array(importJobPostSchema).parse(sampleJobs);
 
+function jobFreshnessDate(job: Pick<JobPost, "postedAt" | "scrapedAt">) {
+  return job.postedAt ?? job.scrapedAt;
+}
+
+export function getFreshJobCutoff(referenceDate = new Date()) {
+  return new Date(referenceDate.getTime() - freshJobWindowDays * dayInMs);
+}
+
+export function getJobAgeInDays(job: Pick<JobPost, "postedAt" | "scrapedAt">, referenceDate = new Date()) {
+  return Math.max(0, Math.floor((referenceDate.getTime() - jobFreshnessDate(job).getTime()) / dayInMs));
+}
+
+export function isFreshJob(job: Pick<JobPost, "postedAt" | "scrapedAt">, referenceDate = new Date()) {
+  return jobFreshnessDate(job) >= getFreshJobCutoff(referenceDate);
+}
+
+export function isNewJob(job: Pick<JobPost, "postedAt" | "scrapedAt">, referenceDate = new Date()) {
+  return getJobAgeInDays(job, referenceDate) <= newJobWindowDays;
+}
+
+export function formatJobFreshness(job: Pick<JobPost, "postedAt" | "scrapedAt">, referenceDate = new Date()) {
+  const ageInDays = getJobAgeInDays(job, referenceDate);
+
+  if (ageInDays === 0) return "Hari ini";
+  if (ageInDays === 1) return "1 hari lalu";
+  return `${ageInDays} hari lalu`;
+}
+
 export function filterJobs(jobs: JobPost[], filters: JobFilters = {}) {
   const keyword = filters.keyword?.trim().toLowerCase();
   const location = filters.location?.trim().toLowerCase();
@@ -140,7 +172,8 @@ export function filterJobs(jobs: JobPost[], filters: JobFilters = {}) {
       (!location || job.location.toLowerCase().includes(location)) &&
       (!category || job.category.toLowerCase() === category) &&
       (!source || job.sourceName.toLowerCase() === source) &&
-      (!employmentType || job.employmentType.toLowerCase() === employmentType)
+      (!employmentType || job.employmentType.toLowerCase() === employmentType) &&
+      (filters.includeStale || isFreshJob(job))
     );
   });
 }
@@ -164,6 +197,15 @@ function toJobPost(job: ImportJobPost & { createdAt?: Date; updatedAt?: Date }):
 
 function whereFromFilters(filters: JobFilters = {}): Prisma.JobPostWhereInput {
   const where: Prisma.JobPostWhereInput = {};
+  const and: Prisma.JobPostWhereInput[] = [];
+
+  if (!filters.includeStale) {
+    const cutoff = getFreshJobCutoff();
+
+    and.push({
+      postedAt: { gte: cutoff },
+    });
+  }
 
   if (filters.keyword?.trim()) {
     const keyword = filters.keyword.trim();
@@ -190,6 +232,10 @@ function whereFromFilters(filters: JobFilters = {}): Prisma.JobPostWhereInput {
 
   if (filters.employmentType?.trim()) {
     where.employmentType = { equals: filters.employmentType.trim(), mode: "insensitive" };
+  }
+
+  if (and.length > 0) {
+    where.AND = and;
   }
 
   return where;

@@ -12,6 +12,7 @@ export async function GET(request: Request) {
       category: searchParams.get("category") ?? undefined,
       source: searchParams.get("source") ?? undefined,
       employmentType: searchParams.get("employmentType") ?? undefined,
+      includeStale: searchParams.get("includeStale") === "true" ? true : undefined,
     });
     const jobs = await getJobs(filters);
 
