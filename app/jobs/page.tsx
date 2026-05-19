@@ -1,7 +1,14 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { CopySearchLink } from "@/components/CopySearchLink";
 import { JobCard } from "@/components/JobCard";
 import { getJobFacets, getJobs, jobFiltersSchema } from "@/lib/jobs";
+
+export const metadata: Metadata = {
+  title: "Browse Lowongan",
+  description: "Jelajahi lowongan kerja terbaru dari berbagai sumber berdasarkan keyword, lokasi, kategori, sumber, dan tipe kerja.",
+  alternates: { canonical: "/jobs" },
+};
 
 type JobsPageProps = {
   searchParams: Promise<{

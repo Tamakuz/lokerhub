@@ -3,8 +3,9 @@ import { CvMatcher } from "@/components/CvMatcher";
 import { getJobs } from "@/lib/jobs";
 
 export const metadata = {
-  title: "CV Matcher | LokerHub",
+  title: "CV Matcher",
   description: "Cocokkan CV kamu dengan lowongan kerja yang tersedia di LokerHub.",
+  alternates: { canonical: "/cv-matcher" },
 };
 
 export default async function CvMatcherPage() {

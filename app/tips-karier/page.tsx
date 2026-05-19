@@ -3,6 +3,7 @@ import Link from "next/link";
 export const metadata = {
   title: "Tips Karier | LokerHub",
   description: "Tips sederhana untuk membantu pencari kerja Indonesia menyiapkan CV dan melamar di sumber asli.",
+  alternates: { canonical: "/tips-karier" },
 };
 
 const tips = [

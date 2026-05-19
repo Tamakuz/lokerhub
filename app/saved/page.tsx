@@ -3,7 +3,9 @@ import { SavedJobsList } from "@/components/SavedJobsList";
 import { getJobs } from "@/lib/jobs";
 
 export const metadata = {
-  title: "Lowongan Tersimpan | LokerHub",
+  title: "Lowongan Tersimpan",
+  description: "Lihat shortlist lowongan kerja yang kamu simpan secara lokal di browser.",
+  alternates: { canonical: "/saved" },
 };
 
 export default async function SavedJobsPage() {

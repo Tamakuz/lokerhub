@@ -245,7 +245,7 @@ export async function getJobs(filters: JobFilters = {}) {
   const normalizedFilters = jobFiltersSchema.parse(filters);
   const jobs = await prisma.jobPost.findMany({
     where: whereFromFilters(normalizedFilters),
-    orderBy: [{ postedAt: "desc" }, { createdAt: "desc" }],
+    orderBy: [{ postedAt: "desc" }, { createdAt: "desc" }, { id: "asc" }],
   });
 
   return z.array(jobPostSchema).parse(jobs);

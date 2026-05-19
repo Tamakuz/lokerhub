@@ -3,6 +3,7 @@ import Link from "next/link";
 export const metadata = {
   title: "Tentang | LokerHub",
   description: "Tentang LokerHub, agregator lowongan kerja Indonesia.",
+  alternates: { canonical: "/tentang" },
 };
 
 export default function AboutPage() {

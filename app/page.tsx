@@ -1,5 +1,12 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { formatJobFreshness, getJobFacets, getJobs } from "@/lib/jobs";
+
+export const metadata: Metadata = {
+  title: "Beranda",
+  description: "LokerHub membantu pencari kerja Indonesia menemukan lowongan dari berbagai sumber, menyimpan peluang, dan melamar di sumber asli.",
+  alternates: { canonical: "/" },
+};
 
 export default async function HomePage() {
   const jobs = await getJobs();
