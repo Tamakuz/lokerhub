@@ -64,6 +64,7 @@ Use these agents:
 - @owner: defines product direction, user value, positioning, MVP scope.
 - @pm: breaks work into milestones, tasks, acceptance criteria.
 - @frontend: builds Next.js UI, components, pages, UX.
+- @ui-ux: defines UI/UX direction, accessibility, visual polish, and inclusive interaction patterns.
 - @backend: builds API, database schema, scraping/import logic, integrations.
 
 ## Working Style
@@ -73,9 +74,10 @@ For large tasks, always use @orchestrator first.
 The orchestrator should:
 1. Consult @owner for product direction.
 2. Consult @pm for task breakdown.
-3. Coordinate @frontend and @backend.
-4. Make frontend/backend agree on API contracts.
-5. Ask @pm to verify the result.
+3. Consult @ui-ux for major user-facing design direction.
+4. Coordinate @frontend and @backend.
+5. Make frontend/backend agree on API contracts.
+6. Ask @pm to verify the result.
 
 ## Technical Preferences
 
