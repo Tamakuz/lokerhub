@@ -4,6 +4,11 @@ import { getJobFacets, getJobs } from "@/lib/jobs";
 export default async function HomePage() {
   const jobs = await getJobs();
   const facets = await getJobFacets();
+  const discoveryGroups = [
+    { title: "Kategori populer", queryKey: "category", values: facets.categories },
+    { title: "Lokasi aktif", queryKey: "location", values: facets.locations },
+    { title: "Sumber lowongan", queryKey: "source", values: facets.sources },
+  ];
 
   return (
     <main>
@@ -27,7 +32,32 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-      <section id="how-it-works" className="border-y border-ink/10 bg-white">
+      <section className="border-y border-ink/10 bg-white">
+        <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-sm font-bold uppercase tracking-[0.2em] text-leaf">Mulai eksplorasi</p>
+              <h2 className="mt-2 text-3xl font-black text-ink">Temukan pola pasar kerja lebih cepat</h2>
+            </div>
+            <Link href="/jobs" className="text-sm font-bold text-leaf hover:text-leaf/80">Lihat semua lowongan</Link>
+          </div>
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
+            {discoveryGroups.map((group) => (
+              <article key={group.title} className="rounded-3xl bg-cream p-5">
+                <h3 className="font-black text-ink">{group.title}</h3>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {group.values.slice(0, 6).map((value) => (
+                    <Link key={value} href={`/jobs?${group.queryKey}=${encodeURIComponent(value)}`} className="rounded-full bg-white px-3 py-2 text-xs font-bold text-ink/70 hover:text-leaf">
+                      {value}
+                    </Link>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+      <section id="how-it-works" className="border-b border-ink/10 bg-white">
         <div className="mx-auto grid max-w-6xl gap-4 px-4 py-12 sm:px-6 md:grid-cols-3 lg:px-8">
           {["Cari", "Bandingkan", "Lamar di sumber"].map((title, index) => (
             <div key={title} className="rounded-3xl bg-cream p-6">
