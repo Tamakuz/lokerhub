@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CvMatcher } from "@/components/CvMatcher";
 import { JobCard } from "@/components/JobCard";
 import { getJobFacets, getJobs, jobFiltersSchema } from "@/lib/jobs";
 
@@ -54,9 +55,12 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
       </form>
 
       {jobs.length > 0 ? (
-        <div className="mt-8 grid gap-4">
-          {jobs.map((job) => <JobCard key={job.id} job={job} />)}
-        </div>
+        <>
+          <CvMatcher jobs={jobs} />
+          <div className="mt-8 grid gap-4">
+            {jobs.map((job) => <JobCard key={job.id} job={job} />)}
+          </div>
+        </>
       ) : (
         <div className="mt-8 rounded-3xl border border-dashed border-ink/20 bg-white p-10 text-center">
           <h2 className="text-xl font-bold">Belum ada lowongan yang cocok</h2>
