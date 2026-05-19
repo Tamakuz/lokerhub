@@ -1,4 +1,5 @@
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { normalizeManualJob } from "@/lib/importJobs";
 import { upsertJobs } from "@/lib/jobs";
 
@@ -22,6 +23,7 @@ async function importManualJob(formData: FormData) {
   await upsertJobs([job]);
   revalidatePath("/");
   revalidatePath("/jobs");
+  redirect(`/admin/import?imported=${encodeURIComponent(job.id)}`);
 }
 
 const fields = [
@@ -37,12 +39,19 @@ const fields = [
   ["postedAt", "Posted at", "2026-05-19T00:00:00.000Z"],
 ] as const;
 
-export default function AdminImportPage() {
+type AdminImportPageProps = {
+  searchParams: Promise<{ imported?: string }>;
+};
+
+export default async function AdminImportPage({ searchParams }: AdminImportPageProps) {
+  const { imported } = await searchParams;
+
   return (
     <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
       <p className="text-sm font-bold uppercase tracking-[0.2em] text-leaf">Admin import</p>
       <h1 className="mt-2 text-3xl font-black text-ink">Manual job import</h1>
       <p className="mt-3 text-ink/70">Add one normalized job post. Use CSV/JSON scripts for batch imports.</p>
+      {imported ? <p className="mt-4 rounded-2xl bg-leaf/10 px-4 py-3 text-sm font-semibold text-leaf">Imported job {imported}. It is now visible in browse and API results.</p> : null}
 
       <form action={importManualJob} className="mt-8 grid gap-4 rounded-3xl border border-ink/10 bg-white p-5 shadow-sm">
         {fields.map(([name, label, placeholder]) => (

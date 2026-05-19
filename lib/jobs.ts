@@ -24,12 +24,14 @@ export const importJobPostSchema = jobPostSchema.omit({ createdAt: true, updated
 export type JobPost = z.infer<typeof jobPostSchema>;
 export type ImportJobPost = z.infer<typeof importJobPostSchema>;
 
-export type JobFilters = {
-  keyword?: string;
-  location?: string;
-  category?: string;
-  source?: string;
-};
+export const jobFiltersSchema = z.object({
+  keyword: z.string().trim().max(100).optional(),
+  location: z.string().trim().max(100).optional(),
+  category: z.string().trim().max(100).optional(),
+  source: z.string().trim().max(100).optional(),
+});
+
+export type JobFilters = z.infer<typeof jobFiltersSchema>;
 
 const now = new Date("2026-05-19T00:00:00.000Z");
 
@@ -186,8 +188,9 @@ function whereFromFilters(filters: JobFilters = {}): Prisma.JobPostWhereInput {
 }
 
 export async function getJobs(filters: JobFilters = {}) {
+  const normalizedFilters = jobFiltersSchema.parse(filters);
   const jobs = await prisma.jobPost.findMany({
-    where: whereFromFilters(filters),
+    where: whereFromFilters(normalizedFilters),
     orderBy: [{ postedAt: "desc" }, { createdAt: "desc" }],
   });
 

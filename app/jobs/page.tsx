@@ -1,5 +1,6 @@
+import Link from "next/link";
 import { JobCard } from "@/components/JobCard";
-import { getJobFacets, getJobs } from "@/lib/jobs";
+import { getJobFacets, getJobs, jobFiltersSchema } from "@/lib/jobs";
 
 type JobsPageProps = {
   searchParams: Promise<{
@@ -11,13 +12,14 @@ type JobsPageProps = {
 };
 
 export default async function JobsPage({ searchParams }: JobsPageProps) {
-  const filters = await searchParams;
-  const jobs = await getJobs({
-    keyword: filters.q,
-    location: filters.location,
-    category: filters.category,
-    source: filters.source,
+  const rawFilters = await searchParams;
+  const filters = jobFiltersSchema.parse({
+    keyword: rawFilters.q,
+    location: rawFilters.location,
+    category: rawFilters.category,
+    source: rawFilters.source,
   });
+  const jobs = await getJobs(filters);
   const facets = await getJobFacets();
 
   return (
@@ -32,7 +34,7 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
       </div>
 
       <form className="mt-8 grid gap-3 rounded-3xl border border-ink/10 bg-white p-4 shadow-sm md:grid-cols-[1.4fr_1fr_1fr_1fr_auto]">
-        <input name="q" defaultValue={filters.q} placeholder="Cari title, company, skill..." className="rounded-2xl border border-ink/10 px-4 py-3 text-sm outline-none focus:border-leaf" />
+        <input name="q" defaultValue={filters.keyword} placeholder="Cari title, company, skill..." className="rounded-2xl border border-ink/10 px-4 py-3 text-sm outline-none focus:border-leaf" />
         <select name="location" defaultValue={filters.location ?? ""} className="rounded-2xl border border-ink/10 px-4 py-3 text-sm outline-none focus:border-leaf">
           <option value="">Semua lokasi</option>
           {facets.locations.map((location) => <option key={location} value={location}>{location}</option>)}
@@ -45,7 +47,10 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
           <option value="">Semua sumber</option>
           {facets.sources.map((source) => <option key={source} value={source}>{source}</option>)}
         </select>
-        <button className="rounded-2xl bg-leaf px-5 py-3 text-sm font-bold text-white hover:bg-leaf/90">Search</button>
+        <div className="flex gap-2">
+          <button className="flex-1 rounded-2xl bg-leaf px-5 py-3 text-sm font-bold text-white hover:bg-leaf/90">Search</button>
+          <Link href="/jobs" className="rounded-2xl border border-ink/10 px-5 py-3 text-sm font-bold text-ink/70 hover:border-leaf/40">Reset</Link>
+        </div>
       </form>
 
       {jobs.length > 0 ? (
