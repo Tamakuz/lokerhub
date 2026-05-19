@@ -18,13 +18,16 @@ describe("JobCard", () => {
     render(<JobCard job={job} />);
 
     expect(screen.getByRole("heading", { name: job.title })).toBeInTheDocument();
-    expect(screen.getByText(`${job.company} · ${job.location}`)).toBeInTheDocument();
+    expect(screen.getByText(job.company)).toBeInTheDocument();
+    expect(screen.getByText(job.location)).toBeInTheDocument();
+    expect(screen.getByText(`Sumber: ${job.sourceName}`)).toBeInTheDocument();
+    expect(screen.getByText(job.salaryText ?? "Gaji tidak dicantumkan")).toBeInTheDocument();
     expect(screen.getByText("Baru")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Simpan lowongan" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: job.title })).toHaveAttribute("href", `/jobs/${job.id}`);
     expect(screen.getByRole("link", { name: "Lihat detail" })).toHaveAttribute("href", `/jobs/${job.id}`);
-    expect(screen.getByRole("link", { name: `Apply di ${job.sourceName}` })).toHaveAttribute("href", job.sourceUrl);
-    expect(screen.getByRole("link", { name: `Apply di ${job.sourceName}` })).toHaveAttribute("target", "_blank");
-    expect(screen.getByRole("link", { name: `Apply di ${job.sourceName}` })).toHaveAttribute("rel", "noreferrer");
+    expect(screen.getByRole("link", { name: "Lamar di sumber asli" })).toHaveAttribute("href", job.sourceUrl);
+    expect(screen.getByRole("link", { name: "Lamar di sumber asli" })).toHaveAttribute("target", "_blank");
+    expect(screen.getByRole("link", { name: "Lamar di sumber asli" })).toHaveAttribute("rel", "noreferrer");
   });
 });

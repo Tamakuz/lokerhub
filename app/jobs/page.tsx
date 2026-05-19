@@ -63,35 +63,52 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
     <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-sm font-bold uppercase tracking-[0.2em] text-leaf">Browse jobs</p>
+          <p className="text-sm font-bold uppercase tracking-[0.2em] text-leaf">Cari lowongan</p>
           <h1 className="mt-2 text-3xl font-black text-ink sm:text-4xl">Lowongan kerja terbaru</h1>
-          <p className="mt-3 text-ink/70">Cari lowongan berdasarkan keyword, lokasi, kategori, atau sumber.</p>
+          <p className="mt-3 max-w-2xl text-ink/70">Temukan pekerjaan dari berbagai sumber, cek kesesuaian, lalu lanjut melamar di situs asli dengan jelas.</p>
         </div>
-        <p className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-ink/70">{jobs.length} result{jobs.length === 1 ? "" : "s"}</p>
+        <p className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-ink/70">{jobs.length} lowongan ditemukan</p>
       </div>
 
-      <form className="mt-8 grid gap-3 rounded-3xl border border-ink/10 bg-white p-4 shadow-sm md:grid-cols-[1.4fr_1fr_1fr_1fr_1fr_auto]">
+      <form className="mt-8 rounded-3xl border border-ink/10 bg-white p-4 shadow-sm sm:p-5">
         {filters.includeStale ? <input type="hidden" name="includeStale" value="true" /> : null}
-        <input name="q" defaultValue={filters.keyword} placeholder="Cari title, company, skill..." className="rounded-2xl border border-ink/10 px-4 py-3 text-sm outline-none focus:border-leaf" />
-        <select name="location" defaultValue={filters.location ?? ""} className="rounded-2xl border border-ink/10 px-4 py-3 text-sm outline-none focus:border-leaf">
-          <option value="">Semua lokasi</option>
-          {facets.locations.map((location) => <option key={location} value={location}>{location}</option>)}
-        </select>
-        <select name="category" defaultValue={filters.category ?? ""} className="rounded-2xl border border-ink/10 px-4 py-3 text-sm outline-none focus:border-leaf">
-          <option value="">Semua kategori</option>
-          {facets.categories.map((category) => <option key={category} value={category}>{category}</option>)}
-        </select>
-        <select name="source" defaultValue={filters.source ?? ""} className="rounded-2xl border border-ink/10 px-4 py-3 text-sm outline-none focus:border-leaf">
-          <option value="">Semua sumber</option>
-          {facets.sources.map((source) => <option key={source} value={source}>{source}</option>)}
-        </select>
-        <select name="employmentType" defaultValue={filters.employmentType ?? ""} className="rounded-2xl border border-ink/10 px-4 py-3 text-sm outline-none focus:border-leaf">
-          <option value="">Semua tipe</option>
-          {facets.employmentTypes.map((employmentType) => <option key={employmentType} value={employmentType}>{employmentType}</option>)}
-        </select>
-        <div className="flex gap-2">
-          <button className="flex-1 rounded-2xl bg-leaf px-5 py-3 text-sm font-bold text-white hover:bg-leaf/90">Search</button>
-          <Link href="/jobs" className="rounded-2xl border border-ink/10 px-5 py-3 text-sm font-bold text-ink/70 hover:border-leaf/40">Reset</Link>
+        <div className="grid gap-4 lg:grid-cols-[1.2fr_1fr_1fr_1fr_1fr]">
+          <label className="grid gap-2 text-sm font-bold text-ink/70">
+            Cari pekerjaan
+            <input name="q" defaultValue={filters.keyword} placeholder="Contoh: React, admin, marketing" className="min-h-12 rounded-2xl border border-ink/10 px-4 py-3 text-sm font-semibold text-ink outline-none transition focus:border-leaf focus:ring-2 focus:ring-leaf/15" />
+          </label>
+          <label className="grid gap-2 text-sm font-bold text-ink/70">
+            Lokasi
+            <select name="location" defaultValue={filters.location ?? ""} className="min-h-12 rounded-2xl border border-ink/10 px-4 py-3 text-sm font-semibold text-ink outline-none transition focus:border-leaf focus:ring-2 focus:ring-leaf/15">
+              <option value="">Semua lokasi</option>
+              {facets.locations.map((location) => <option key={location} value={location}>{location}</option>)}
+            </select>
+          </label>
+          <label className="grid gap-2 text-sm font-bold text-ink/70">
+            Kategori
+            <select name="category" defaultValue={filters.category ?? ""} className="min-h-12 rounded-2xl border border-ink/10 px-4 py-3 text-sm font-semibold text-ink outline-none transition focus:border-leaf focus:ring-2 focus:ring-leaf/15">
+              <option value="">Semua kategori</option>
+              {facets.categories.map((category) => <option key={category} value={category}>{category}</option>)}
+            </select>
+          </label>
+          <label className="grid gap-2 text-sm font-bold text-ink/70">
+            Sumber
+            <select name="source" defaultValue={filters.source ?? ""} className="min-h-12 rounded-2xl border border-ink/10 px-4 py-3 text-sm font-semibold text-ink outline-none transition focus:border-leaf focus:ring-2 focus:ring-leaf/15">
+              <option value="">Semua sumber</option>
+              {facets.sources.map((source) => <option key={source} value={source}>{source}</option>)}
+            </select>
+          </label>
+          <label className="grid gap-2 text-sm font-bold text-ink/70">
+            Tipe kerja
+            <select name="employmentType" defaultValue={filters.employmentType ?? ""} className="min-h-12 rounded-2xl border border-ink/10 px-4 py-3 text-sm font-semibold text-ink outline-none transition focus:border-leaf focus:ring-2 focus:ring-leaf/15">
+              <option value="">Semua tipe</option>
+              {facets.employmentTypes.map((employmentType) => <option key={employmentType} value={employmentType}>{employmentType}</option>)}
+            </select>
+          </label>
+        </div>
+        <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-end">
+          <button className="min-h-12 rounded-2xl bg-leaf px-6 py-3 text-sm font-bold text-white transition hover:bg-leaf/90 focus:outline-none focus:ring-2 focus:ring-leaf/30">Tampilkan lowongan</button>
+          <Link href="/jobs" className="min-h-12 rounded-2xl border border-ink/10 px-6 py-3 text-center text-sm font-bold text-ink/70 transition hover:border-leaf/40 hover:text-leaf">Hapus filter</Link>
         </div>
       </form>
 
@@ -103,7 +120,7 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
       {activeFilters.length > 0 ? (
         <div className="mt-4 rounded-3xl border border-leaf/15 bg-leaf/10 p-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm font-semibold text-ink/70">Menampilkan {jobs.length} lowongan dengan filter aktif. URL ini bisa dibagikan ke teman atau disimpan.</p>
+            <p className="text-sm font-semibold text-ink/70">Menampilkan {jobs.length} lowongan sesuai filter. Link pencarian ini bisa dibagikan atau disimpan.</p>
             <CopySearchLink />
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
@@ -132,7 +149,7 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
       ) : (
         <div className="mt-8 rounded-3xl border border-dashed border-ink/20 bg-white p-6 sm:p-10">
           <div className="mx-auto max-w-2xl text-center">
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-leaf">Search recovery</p>
+            <p className="text-sm font-bold uppercase tracking-[0.2em] text-leaf">Bantu cari lagi</p>
             <h2 className="mt-2 text-2xl font-black text-ink">Belum ada lowongan yang cocok</h2>
             <p className="mt-3 text-sm leading-6 text-ink/65">Coba hapus salah satu filter, gunakan keyword yang lebih umum, atau mulai dari lowongan terbaru di bawah.</p>
             <div className="mt-5 flex flex-col justify-center gap-3 sm:flex-row">
