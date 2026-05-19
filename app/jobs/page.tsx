@@ -23,6 +23,13 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
   const jobs = await getJobs(filters);
   const facets = await getJobFacets();
 
+  const activeFilters = [
+    filters.keyword ? `keyword “${filters.keyword}”` : null,
+    filters.location ? `lokasi ${filters.location}` : null,
+    filters.category ? `kategori ${filters.category}` : null,
+    filters.source ? `sumber ${filters.source}` : null,
+  ].filter(Boolean);
+
   return (
     <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -53,6 +60,13 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
           <Link href="/jobs" className="rounded-2xl border border-ink/10 px-5 py-3 text-sm font-bold text-ink/70 hover:border-leaf/40">Reset</Link>
         </div>
       </form>
+
+      {activeFilters.length > 0 ? (
+        <div className="mt-4 flex flex-col gap-3 rounded-3xl border border-leaf/15 bg-leaf/10 p-4 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm font-semibold text-ink/70">Menampilkan {jobs.length} lowongan untuk {activeFilters.join(", ")}.</p>
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-leaf">URL ini bisa dibagikan</p>
+        </div>
+      ) : null}
 
       {jobs.length > 0 ? (
         <>
