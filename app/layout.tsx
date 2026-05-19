@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { SiteFooter } from "@/components/SiteFooter";
+import { SiteHeader } from "@/components/SiteHeader";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -11,16 +12,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="id">
       <body className="bg-cream text-ink antialiased">
-        <header className="border-b border-ink/10 bg-white/80 backdrop-blur">
-          <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-            <Link href="/" className="text-xl font-bold text-leaf">LokerHub</Link>
-            <div className="flex items-center gap-2">
-              <Link href="/saved" className="rounded-full border border-ink/10 px-4 py-2 text-sm font-semibold text-ink/70 hover:border-leaf/40 hover:text-leaf">Saved</Link>
-              <Link href="/jobs" className="rounded-full bg-ink px-4 py-2 text-sm font-semibold text-white hover:bg-ink/90">Browse Jobs</Link>
-            </div>
-          </nav>
-        </header>
+        <SiteHeader />
         {children}
+        <SiteFooter />
       </body>
     </html>
   );

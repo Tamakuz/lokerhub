@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { CopySearchLink } from "@/components/CopySearchLink";
-import { CvMatcher } from "@/components/CvMatcher";
 import { JobCard } from "@/components/JobCard";
 import { getJobFacets, getJobs, jobFiltersSchema } from "@/lib/jobs";
 
@@ -115,6 +114,7 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
       <div className="mt-4 flex flex-wrap gap-2">
         {!filters.includeStale ? <Link href={filterHref({ ...currentFilterParams, includeStale: true })} className="rounded-full bg-white px-4 py-2 text-xs font-bold text-ink/60 shadow-sm transition hover:text-leaf">Lihat termasuk lowongan lama</Link> : null}
         {filters.includeStale ? <Link href={filterHref(currentFilterParams, "includeStale")} className="rounded-full border border-leaf/20 px-4 py-2 text-xs font-bold text-leaf transition hover:bg-white">Sembunyikan lowongan lama</Link> : null}
+        <Link href="/cv-matcher" className="rounded-full bg-ink px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-ink/90">Cocokkan CV</Link>
       </div>
 
       {activeFilters.length > 0 ? (
@@ -140,12 +140,9 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
       ) : null}
 
       {jobs.length > 0 ? (
-        <>
-          <CvMatcher jobs={jobs} />
-          <div className="mt-8 grid gap-4">
-            {jobs.map((job) => <JobCard key={job.id} job={job} />)}
-          </div>
-        </>
+        <div className="mt-8 grid gap-4">
+          {jobs.map((job) => <JobCard key={job.id} job={job} />)}
+        </div>
       ) : (
         <div className="mt-8 rounded-3xl border border-dashed border-ink/20 bg-white p-6 sm:p-10">
           <div className="mx-auto max-w-2xl text-center">
