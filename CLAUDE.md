@@ -115,3 +115,12 @@ A job post includes:
 - Prioritize clean job listing, search, and source routing.
 - Document assumptions.
 - Run build/lint when possible.
+
+## Git Authorship
+
+Alternate commit authors for future commits in this order:
+
+1. Jovan Panji Pratama <jovangithub@gmail.com>
+2. Risma Amalina <keymarlin28@gmail.com>
+
+Use `git log -1 --format='%an <%ae>'` before committing, then commit as the next author in the rotation using `git commit --author="Name <email>"`.
