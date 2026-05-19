@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: lockerhub-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: lockerhub
+      POSTGRES_PASSWORD: lockerhub
+      POSTGRES_DB: lockerhub
+    ports:
+      - "5432:5432"
+    volumes:
+      - lockerhub-postgres-data:/var/lib/postgresql/data
+
+volumes:
+  lockerhub-postgres-data:
+  
