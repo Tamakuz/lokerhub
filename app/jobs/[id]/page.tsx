@@ -28,6 +28,8 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
     notFound();
   }
 
+  const sourceHost = new URL(job.sourceUrl).hostname.replace(/^www\./, "");
+
   return (
     <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
       <Link href="/jobs" className="text-sm font-bold text-leaf hover:text-leaf/80">← Back to jobs</Link>
@@ -52,10 +54,24 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
           <p className="mt-3 leading-8 text-ink/75">{job.description}</p>
         </section>
 
+        <section className="mt-8 grid gap-4 rounded-3xl bg-cream p-5 sm:grid-cols-[0.9fr_1.1fr]">
+          <div>
+            <p className="text-sm font-bold uppercase tracking-[0.18em] text-leaf">Apply readiness</p>
+            <h2 className="mt-2 text-xl font-black text-ink">Siapkan sebelum lanjut melamar</h2>
+            <p className="mt-2 text-sm leading-6 text-ink/65">Gunakan ringkasan ini untuk cek cepat agar apply di sumber asli lebih lancar.</p>
+          </div>
+          <ul className="grid gap-2 text-sm font-semibold text-ink/70">
+            <li className="rounded-2xl bg-white px-4 py-3">CV sudah menonjolkan pengalaman {job.category.toLowerCase()}.</li>
+            <li className="rounded-2xl bg-white px-4 py-3">Lokasi atau mode kerja cocok dengan {job.location}.</li>
+            <li className="rounded-2xl bg-white px-4 py-3">Ekspektasi gaji sudah dibandingkan dengan {job.salaryText ?? "informasi yang tersedia"}.</li>
+          </ul>
+        </section>
+
         <div className="mt-8 flex flex-col gap-3 rounded-3xl bg-ink p-5 text-white sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm font-semibold text-white/65">Lanjutkan di sumber asli</p>
             <p className="mt-1 font-bold">Apply via {job.sourceName}</p>
+            <p className="mt-1 text-xs font-semibold text-white/50">Membuka {sourceHost} di tab baru.</p>
           </div>
           <a href={job.sourceUrl} target="_blank" rel="noreferrer" className="rounded-full bg-white px-5 py-3 text-center text-sm font-black text-ink hover:bg-cream">Open source job</a>
         </div>
