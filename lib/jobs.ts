@@ -29,6 +29,7 @@ export const jobFiltersSchema = z.object({
   location: z.string().trim().max(100).optional(),
   category: z.string().trim().max(100).optional(),
   source: z.string().trim().max(100).optional(),
+  employmentType: z.string().trim().max(100).optional(),
 });
 
 export type JobFilters = z.infer<typeof jobFiltersSchema>;
@@ -129,6 +130,7 @@ export function filterJobs(jobs: JobPost[], filters: JobFilters = {}) {
   const location = filters.location?.trim().toLowerCase();
   const category = filters.category?.trim().toLowerCase();
   const source = filters.source?.trim().toLowerCase();
+  const employmentType = filters.employmentType?.trim().toLowerCase();
 
   return jobs.filter((job) => {
     const keywordText = `${job.title} ${job.company} ${job.location} ${job.category} ${job.description}`.toLowerCase();
@@ -137,7 +139,8 @@ export function filterJobs(jobs: JobPost[], filters: JobFilters = {}) {
       (!keyword || keywordText.includes(keyword)) &&
       (!location || job.location.toLowerCase().includes(location)) &&
       (!category || job.category.toLowerCase() === category) &&
-      (!source || job.sourceName.toLowerCase() === source)
+      (!source || job.sourceName.toLowerCase() === source) &&
+      (!employmentType || job.employmentType.toLowerCase() === employmentType)
     );
   });
 }
@@ -147,6 +150,7 @@ export function getJobFacetsFromJobs(jobs: JobPost[]) {
     locations: Array.from(new Set(jobs.map((job) => job.location))).sort(),
     categories: Array.from(new Set(jobs.map((job) => job.category))).sort(),
     sources: Array.from(new Set(jobs.map((job) => job.sourceName))).sort(),
+    employmentTypes: Array.from(new Set(jobs.map((job) => job.employmentType))).sort(),
   };
 }
 
@@ -182,6 +186,10 @@ function whereFromFilters(filters: JobFilters = {}): Prisma.JobPostWhereInput {
 
   if (filters.source?.trim()) {
     where.sourceName = { equals: filters.source.trim(), mode: "insensitive" };
+  }
+
+  if (filters.employmentType?.trim()) {
+    where.employmentType = { equals: filters.employmentType.trim(), mode: "insensitive" };
   }
 
   return where;

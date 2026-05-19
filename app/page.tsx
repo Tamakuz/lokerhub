@@ -7,7 +7,7 @@ export default async function HomePage() {
   const discoveryGroups = [
     { title: "Kategori populer", queryKey: "category", values: facets.categories },
     { title: "Lokasi aktif", queryKey: "location", values: facets.locations },
-    { title: "Sumber lowongan", queryKey: "source", values: facets.sources },
+    { title: "Tipe kerja", queryKey: "employmentType", values: facets.employmentTypes },
   ];
 
   return (

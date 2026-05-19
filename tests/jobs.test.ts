@@ -9,10 +9,11 @@ describe("job filtering", () => {
     expect(filterJobs(jobs, { keyword: "KaryaCloud" })[0]?.id).toBe("backend-engineer-bandung-1");
   });
 
-  it("filters by location, category, and source", () => {
+  it("filters by location, category, source, and employment type", () => {
     expect(filterJobs(jobs, { location: "Jakarta" })).toHaveLength(1);
     expect(filterJobs(jobs, { category: "Engineering" })).toHaveLength(2);
     expect(filterJobs(jobs, { source: "Glints" })[0]?.id).toBe("backend-engineer-bandung-1");
+    expect(filterJobs(jobs, { employmentType: "Contract" })[0]?.id).toBe("product-designer-remote-1");
   });
 
   it("builds sorted facets", () => {
@@ -21,5 +22,6 @@ describe("job filtering", () => {
     expect(facets.categories).toContain("Engineering");
     expect(facets.sources).toContain("LinkedIn");
     expect(facets.locations).toContain("Jakarta Selatan");
+    expect(facets.employmentTypes).toContain("Full-time");
   });
 });

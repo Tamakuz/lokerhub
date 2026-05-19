@@ -11,6 +11,7 @@ export async function GET(request: Request) {
       location: searchParams.get("location") ?? undefined,
       category: searchParams.get("category") ?? undefined,
       source: searchParams.get("source") ?? undefined,
+      employmentType: searchParams.get("employmentType") ?? undefined,
     });
     const jobs = await getJobs(filters);
 
