@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { SaveJobButton } from "@/components/SaveJobButton";
 import { getJobById, getJobs } from "@/lib/jobs";
 
 type JobDetailPageProps = {
@@ -40,7 +41,10 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
             <h1 className="mt-3 text-3xl font-black tracking-tight text-ink sm:text-5xl">{job.title}</h1>
             <p className="mt-4 text-lg text-ink/70">{job.company} · {job.location}</p>
           </div>
-          <span className="w-fit rounded-full bg-leaf/10 px-4 py-2 text-sm font-bold text-leaf">{job.category}</span>
+          <div className="flex flex-col items-start gap-2 sm:items-end">
+            <span className="w-fit rounded-full bg-leaf/10 px-4 py-2 text-sm font-bold text-leaf">{job.category}</span>
+            <SaveJobButton jobId={job.id} variant="detail" />
+          </div>
         </div>
 
         <dl className="mt-8 grid gap-4 sm:grid-cols-3">

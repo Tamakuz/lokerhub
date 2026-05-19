@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SaveJobButton } from "@/components/SaveJobButton";
 import type { JobPost } from "@/lib/jobs";
 
 export function JobCard({ job }: { job: JobPost }) {
@@ -22,6 +23,7 @@ export function JobCard({ job }: { job: JobPost }) {
           <span>· Posted {new Intl.DateTimeFormat("id-ID", { dateStyle: "medium" }).format(new Date(job.postedAt))}</span>
         </div>
         <div className="flex flex-col gap-2 sm:flex-row">
+          <SaveJobButton jobId={job.id} />
           <Link href={`/jobs/${job.id}`} className="rounded-full border border-ink/10 px-4 py-2 text-center text-sm font-bold text-ink/70 transition hover:border-leaf/40 hover:text-leaf">Lihat detail</Link>
           <a href={job.sourceUrl} target="_blank" rel="noreferrer" className="rounded-full bg-leaf px-4 py-2 text-center text-sm font-bold text-white transition hover:bg-leaf/90">Apply di {job.sourceName}</a>
         </div>

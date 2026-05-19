@@ -11,6 +11,7 @@ describe("JobCard", () => {
 
     expect(screen.getByRole("heading", { name: job.title })).toBeInTheDocument();
     expect(screen.getByText(`${job.company} · ${job.location}`)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Simpan lowongan" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: job.title })).toHaveAttribute("href", `/jobs/${job.id}`);
     expect(screen.getByRole("link", { name: "Lihat detail" })).toHaveAttribute("href", `/jobs/${job.id}`);
     expect(screen.getByRole("link", { name: `Apply di ${job.sourceName}` })).toHaveAttribute("href", job.sourceUrl);
